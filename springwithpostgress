@@ -10,9 +10,12 @@ docker create -v /var/lib/postgresql/data --name PostgresData alpine
 then, we create the database.
 docker run -p 5432:5432 --name postgres -e POSTGRES_PASSWORD=admin -d --volumes-from PostgresData postgres
  67  apt install postgresql-client
+docker ps
 
-First it checks local repository for images, if not found it pulls from the docker hub.
-Now again you can check docker containers and images with above commands. Check the changes. Then open pgAdmin3 for creating tables inside the database.Add new server and create new database with the name ‘testdb’ and run following SQL query.
+#we need to login to postgress database
+ psql -h localhost -U postgres
+
+
 DROP TABLE IF EXISTS books CASCADE;
 CREATE TABLE books (
   id         SERIAL,
