@@ -9,6 +9,8 @@ Now we need to set up postgres database. We can get it from the Docker Hub. But 
 docker create -v /var/lib/postgresql/data --name PostgresData alpine
 then, we create the database.
 docker run -p 5432:5432 --name postgres -e POSTGRES_PASSWORD=admin -d --volumes-from PostgresData postgres
+ 67  apt install postgresql-client
+
 First it checks local repository for images, if not found it pulls from the docker hub.
 Now again you can check docker containers and images with above commands. Check the changes. Then open pgAdmin3 for creating tables inside the database.Add new server and create new database with the name ‘testdb’ and run following SQL query.
 DROP TABLE IF EXISTS books CASCADE;
@@ -27,24 +29,14 @@ VALUES (1, 'Madol Duwa', 'Martin Wickramasinghe'),
 
 CREATE SEQUENCE hibernate_sequence START 1;
 SELECT setval('hibernate_sequence', (SELECT max(id) FROM public.books));
-okay, now you have a complete database up and running.
-To stop container ,run
-docker container stop [container name1] [container name2] [...]
-To start container,run
-docker container start [container name1] [container name2] [...]
-To remove containers,run
-docker container rm [container name1] [container name2] [...]
-or to remove all containers ,run
-docker container rm -f $(docker ps -aq)
-To remove images, run
-docker rmi -f [container name1] [container name2] [...]
-or to remove all images, run
-docker rmi -f $(docker images -a -q)
+exit
 Nice work, now we are done with the database. Next we are going to create the springboot app.
 Step 3:
 Lets build a springboot app to get some data from the postgres db.
 Task: we have some book data — id,title,auther — in the db and we send GET request to retrieve data from db.
+
 BookEntity.java
+
 package com.example.demo;
 
 import lombok.Getter;
@@ -67,6 +59,7 @@ public class BookEntity {
     private String author;
 
 }
+
 BookRepositoty.java
 package com.example.demo;
 
@@ -77,6 +70,7 @@ public interface BookRepository  extends JpaRepository<BookEntity,String> {
     BookEntity findById(Long id);
 
 }
+
 RestController.java
 package com.example.demo;
 
